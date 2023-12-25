@@ -1,21 +1,31 @@
 import Image from 'next/image'
+import React, { useState } from 'react'
 
 export default function Player({ player }) {
   const { id, is_admin, login, first_name, last_name, email, joined, finished, born, introduced_by, comment, anonymous, goalie } = player
 
+  const [errorImage, setErrorImage] = useState(null)
+  const errorImageUrl = "/images/mugshots/manofmystery.jpg"
+
+  const url = errorImage ? errorImageUrl : "/images/mugshots/" + login + ".jpg"
+
   return (
     <div
-      className="max-w-[250px] rounded overflow-hidden shadow-lg"
+      className="w-[250px] rounded overflow-hidden shadow-lg"
       key={player.id}
     >
-      {/* <Image
+      <Image
         className="w-full"
         width={250}
         height={250}
-        objectFit="cover"
-        src={image}
+        src={url}
         alt={first_name}
-      /> */}
+        onError={(e) => {
+          if (!errorImage) {
+            setErrorImage(true)
+          }
+        }}
+      />
       <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2">{first_name} {last_name}</div>
         <p className="text-gray-700 text-base">{email}</p>
