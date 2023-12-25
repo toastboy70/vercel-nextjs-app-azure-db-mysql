@@ -1,47 +1,47 @@
 import Head from 'next/head'
-import Product from '../components/Product'
+import Player from '../components/Player'
 import prisma from '../lib/prisma'
 
-export default function Home({ products }) {
+export default function Home({ players }) {
   return (
     <div>
       <Head>
-        <title> Next.js and Azure Database for MySQL Quickstart</title>
-        <meta name="description" content="Next.js and Azure Database for MySQL Quickstart" />
+        <title>Toastboy FC</title>
+        <meta name="description" content="Toastboy FC: five-a-side footy on Tuesdays at Kelsey Kerridge, Cambridge" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="p-10 mx-auto max-w-4xl">
-        <h1 className="text-6xl font-bold mb-4 text-center">Next.js and Azure Database for MySQL Quickstart</h1>
+        <h1 className="text-6xl font-bold mb-4 text-center">Tuesday Footy Players</h1>
         <p className="mb-20 text-xl text-center">
-          🔥 Shop from the hottest items in the world 🔥
+          🔥 I mean, look at them 🔥
         </p>
         <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-items-center  gap-4">
-          {products.map((product) => (
-            <Product product={product} key={product.id} />
+          {players.map((player) => (
+            <Player player={player} key={player.id} />
           ))}
         </div>
       </main>
 
-      <footer>         
+      <footer>
       </footer>
     </div>
   )
 }
 
 export async function getStaticProps(context) {
-  const data = await prisma.product.findMany({
-    include: {
-      category: true,
-    },
+  const data = await prisma.player.findMany({
   })
 
-  //convert decimal value to string to pass through as json
-  const products = data.map((product) => ({
-    ...product,
-    price: product.price.toString(),
+  // Make sure things are serialisable as JSON
+  const players = data.map((player) => ({
+    ...player,
+    born: player.born == null ? "" : player.born.toString(),
+    finished: player.finished == null ? "" : player.finished.toString(),
+    joined: player.joined == null ? "" : player.joined.toString(),
   }))
   return {
-    props: { products },
+    props: { players },
+    revalidate: 10,
   }
 }
