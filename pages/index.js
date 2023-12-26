@@ -31,14 +31,19 @@ export default function Home({ players }) {
 
 export async function getStaticProps(context) {
   const data = await prisma.player.findMany({
+    where: {
+      finished: {
+        equals: null,
+      },
+    },
   })
 
   // Make sure things are serialisable as JSON
   const players = data.map((player) => ({
     ...player,
-    born: player.born == null ? "" : player.born.toString(),
-    finished: player.finished == null ? "" : player.finished.toString(),
-    joined: player.joined == null ? "" : player.joined.toString(),
+    born: player.born == null ? "" : player.born.toLocaleDateString('sv'),
+    finished: player.finished == null ? "" : player.finished.toLocaleDateString('sv'),
+    joined: player.joined == null ? "" : player.joined.toLocaleDateString('sv'),
   }))
   return {
     props: { players },
